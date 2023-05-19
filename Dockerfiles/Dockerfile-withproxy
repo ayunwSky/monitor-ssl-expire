@@ -1,0 +1,30 @@
+FROM python:3.11.2
+LABEL Author="ayunwSky"
+
+ENV PYTHONIOENCODING=utf-8 \
+    TZ=Asia/Shanghai \
+    DEBIAN_FRONTEND=noninteractive
+
+RUN mkdir -p /data/monitor-ssl/src
+
+COPY src /data/monitor-ssl/src/
+
+RUN export http_proxy="your-proxy-address" \
+    && export https_proxy="your-proxy-address" \
+    && export HTTP_PROXY="your-proxy-address" \
+    && export HTTPS_PROXY="your-proxy-address" \
+    && export no_proxy="your-noproxy-address" \
+    && pip install --no-cache-dir -r /data/monitor-ssl/src/requirements.txt \
+    && apt install -y tzdata \
+    && chmod +x /data/monitor-ssl/src/startApp.sh \
+    && ln -fs /usr/share/zoneinfo/${TZ} /etc/localtime \
+    && echo ${TZ} > /etc/timezone \
+    && dpkg-reconfigure --frontend noninteractive tzdata \
+    && unset http_proxy https_proxy HTTP_PROXY HTTPS_PROXY no_proxy \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /data/monitor-ssl
+
+EXPOSE 8080
+
+CMD ["/data/monitor-ssl/src/startApp.sh"]

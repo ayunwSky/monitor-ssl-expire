@@ -1,0 +1,4 @@
+# 必须严格按照以下方式来写
+domains:
+  - "demo.example1.cn:443"
+  - "demo.example2.cn:8443"

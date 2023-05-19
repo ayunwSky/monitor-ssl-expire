@@ -1,0 +1,25 @@
+FROM python:3.11.2
+LABEL Author="ayunwSky"
+
+ENV PYTHONIOENCODING=utf-8 \
+    TZ=Asia/Shanghai \
+    DEBIAN_FRONTEND=noninteractive
+
+RUN mkdir -p /data/monitor-ssl/src
+
+COPY src /data/monitor-ssl/src/
+
+RUN pip install --no-cache-dir -r /data/monitor-ssl/src/requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple \
+    && apt install -y tzdata \
+    && chmod +x /data/monitor-ssl/src/startApp.sh \
+    && ln -fs /usr/share/zoneinfo/${TZ} /etc/localtime \
+    && echo ${TZ} > /etc/timezone \
+    && dpkg-reconfigure --frontend noninteractive tzdata \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /data/monitor-ssl
+
+EXPOSE 8080
+
+# CMD ["python", "/data/monitor-ssl/src/main.py"]
+CMD ["/data/monitor-ssl/src/startApp.sh"]

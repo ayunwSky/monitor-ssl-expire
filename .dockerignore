@@ -1,0 +1,13 @@
+# files
+.DS_Store
+.gitlab-ci.yml
+.gitignore
+helm-values.yaml
+README.md
+docker-compose.yml
+
+# dirs
+.history/
+venv/
+__pycache__/
+Dockerfiles/

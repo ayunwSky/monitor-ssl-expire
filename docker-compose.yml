@@ -1,0 +1,34 @@
+version: "3"
+
+services:
+  monitor-ssl-expire:
+    container_name: monitor-ssl-expire
+    image: monitor-ssl-expire:v20230519-v1684473706
+    restart: always
+    ports:
+      - "8080:8080"
+    environment:
+      APP_ENV: "prod"
+      APP_PORT: "8080"
+      APP_HOST: "0.0.0.0"
+      APP_MAIL_USER: "发件人邮箱的用户名"
+      APP_MAIL_PORT: "邮件服务器端口"
+      APP_MAIL_PAAS: "发件人邮箱的密码"
+      APP_MAIL_HOST: "SMTP邮件服务器"
+      APP_MAIL_SENDER: "发件人邮箱"
+      APP_OPEN_EMAIL: "0"
+      APP_OPEN_DINGTALK: "1"
+      APP_DINGTALK_TOKEN: "钉钉机器人的token,只需要access_token=后面那一段"
+      APP_DINGTALK_SECRET: "钉钉机器人安全设置的加签秘钥"
+      APP_DINGTALK_PHONE_MEMBER: "钉钉群组的成员手机号,多个成员手机号用逗号分隔"
+      SSL_EXPIRE_DAYS: "30"
+    networks:
+      - monitor-ssl-expire
+
+networks:
+  monitor-ssl-expire:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.23.0.0/24

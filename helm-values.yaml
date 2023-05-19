@@ -1,0 +1,69 @@
+deployment:
+  appLog:
+    enabled: true
+  ports:
+    - containerPort: 8080
+      protocol: TCP
+  healthCheck:
+    path: /healthz
+    port: TCP-8080
+  env:
+    enabled: true
+    default:
+      - name: APP_ENV
+        value: "prod"
+      - name: APP_HOST
+        value: "0.0.0.0"
+      - name: APP_PORT
+        value: "8080"
+      # - name: APP_MAIL_PORT
+      #   value: "邮件服务器端口"
+      # - name: APP_MAIL_USER
+      #   value: "发件人邮箱的用户名"
+      # - name: APP_MAIL_HOST
+      #   value: "SMTP邮件服务器"
+      # - name: APP_MAIL_PAAS
+      #   value: "发件人邮箱的密码"
+      # - name: APP_MAIL_SENDER
+      #   value: "发件人邮箱"
+      # - name: "APP_OPEN_EMAIL"
+      #   value: "0"
+      - name: "APP_OPEN_DINGTALK"
+        value: "是否开启钉钉接收告警. 1 为开启, 0 为关闭"
+      - name: "APP_DINGTALK_TOKEN"
+        value: "钉钉机器人的token,只需要access_token=后面那一段"
+      - name: "APP_DINGTALK_SECRET"
+        value: "钉钉机器人安全设置的加签秘钥"
+      - name: "APP_DINGTALK_PHONE_MEMBER"
+        value: "钉钉群中成员手机号,多个手机号用逗号隔开"
+      - name: SSL_EXPIRE_DAYS
+        value: "SSL 证书过期多少天才会发送告警. 默认 30 天"
+
+
+# 服务配置
+service:
+  config:
+    - targetPort: 8080
+      advanced:
+        enabled: false
+      ingress:
+        enabled: true
+        vhosts:
+          # 配置需要发布的服务的域名
+          # appType决定了域名发布为公网还是内网域名，只有两个可选值：internal、external
+          - appType: internal
+            # 用双引号引起来表示字符串。如果不用双引号，chart包渲染可能会提示类型不匹配问题
+            # domainType决定了发布为哪个域名后缀，有三个可选值：default、portal(门户网站)、bothway(双向认证)
+            domainType: "default"
+            # true：开启https双向认证，false：关闭https双向认证
+            # domainType为bothway时这个值要设置为true
+            verifyClientCert: false
+            # 此项用于特定需求需要自定义域名前缀的情况。
+            # 如果是发布网关项目，则下面domainPrefixes直接注释掉，会使用下面gateways下定义的domainPrefixes
+            domainPrefixes:
+              - monitor-ssl-expire
+          - appType: external
+            domainType: "default"
+            verifyClientCert: false
+            domainPrefixes:
+              - monitor-ssl-expire

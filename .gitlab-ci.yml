@@ -1,0 +1,11 @@
+variables:
+  BUILD_TYPE: PYTHON3
+  COMPILE_DEBUG_TIME: 1
+  GEN_ENV_DEBUG_TIME: 1
+  BUILD_DEBUG_TIME: 1
+  DEPLOY_DEBUG_TIME: 1
+
+include:
+  - project: 'PaaS/gitlab-ci-template'
+    ref: 'newplatform'
+    file: 'src/.gitlab-ci-template.yml'
