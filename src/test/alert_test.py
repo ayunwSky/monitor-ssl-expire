@@ -32,37 +32,36 @@ class AlertTest():
         # 发送的用户，以及发送的消息，多用户使用"user1|user2|user3"
         resp = dtalk.sendmessage(phone_numbers, "自定义告警模块实现钉钉告警通知测试")
         if resp["errcode"] == 0:
-            print("发送告警成功")
             logger.info("发送告警成功")
         else:
             resp_code = resp["errcode"]
             resp_msg = resp["errmsg"]
-            print(f"错误信息: {resp_msg}")
             logger.error(f"Error code: {resp_code}.Error message: {resp_msg}")
 
     def test_sendemail():
-        smtp = alert.Email()
-        ret = smtp.sendmessage()
-        logger.info(ret["errcode"])
-        # if ret["errcode"]:
-        #     print("发送成功")
-        # else:
-        #     print(ret["errmsg"])
+        # 默认ssl是True
+        smtp = alert.Email("发件人账号", "发件人密码", smtp="smtp地址", smtp_port="smtp端口 int", smtp_ssl=False)
+        resp = smtp.sendmessage("收件人账号", '标题', '内容')
+        if resp["errcode"]:
+            logger.info("发送成功")
+        else:
+            logger.error(resp["errmsg"])
 
     def test_wechat():
         corpid = "企业的ID"
         secret = "自定义应用secret"
         agentid = "自定义应用agentid"
         wechat = alert.WeiXin(corpid, secret, agentid)
-        ret = wechat.sendmessage("消息接受者（在企业微信后台查看的账号）", "发送内容")
-        # if ret["errcode"]:
-        #     print("发送成功")
-        # else:
-        #     print(ret["errmsg"])
+        resp = wechat.sendmessage("消息接受者（在企业微信后台查看的账号）", "发送内容")
+        if resp["errcode"]:
+            logger.info("发送成功")
+        else:
+            logger.error(resp["errmsg"])
 
 
 if __name__ == '__main__':
     alertTest = AlertTest()
+
     alertTest.test_dingtalk()
     # alertTest.test_sendemail()
     # alertTest.test_wechat()
