@@ -16,18 +16,18 @@ deployment:
         value: "0.0.0.0"
       - name: APP_PORT
         value: "8080"
-      # - name: "APP_OPEN_EMAIL"
-      #   value: "0"
-      # - name: APP_MAIL_PORT
-      #   value: "邮件服务器端口"
-      # - name: APP_MAIL_USER
-      #   value: "发件人邮箱的用户名"
-      # - name: APP_MAIL_HOST
-      #   value: "SMTP邮件服务器"
-      # - name: APP_MAIL_PAAS
-      #   value: "发件人邮箱的密码"
-      # - name: APP_MAIL_SENDER
-      #   value: "发件人邮箱"
+      - name: "APP_OPEN_EMAIL"
+        value: "0"
+      - name: APP_MAIL_PORT
+        value: "邮件服务器端口"
+      - name: APP_MAIL_USER
+        value: "发件人邮箱的用户名"
+      - name: APP_MAIL_HOST
+        value: "SMTP邮件服务器"
+      - name: APP_MAIL_PAAS
+        value: "发件人邮箱的密码"
+      - name: APP_MAIL_SENDER
+        value: "发件人邮箱"
       - name: "APP_OPEN_DINGTALK"
         value: "是否开启钉钉接收告警. 1 为开启, 0 为关闭"
       - name: "APP_DINGTALK_TOKEN"
