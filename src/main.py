@@ -16,8 +16,8 @@ root_path = os.path.dirname(os.path.dirname(os.path.dirname(os.path.realpath(__f
 if root_path not in sys.path:
     sys.path.insert(0, root_path)
 
-from src.utils import settings
-from src.utils.custom_logging import logger
+from utils import settings
+from utils.custom_logging import logger
 from certificateMonitor import certificateMonitor
 
 app = Sanic(__name__)

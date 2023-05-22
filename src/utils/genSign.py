@@ -20,7 +20,7 @@ root_path = os.path.dirname(os.path.dirname(os.path.dirname(os.path.realpath(__f
 if root_path not in sys.path:
     sys.path.insert(0, root_path)
 
-from src.utils import settings
+from utils import settings
 
 
 def gen_sign():

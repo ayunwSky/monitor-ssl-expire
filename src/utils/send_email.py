@@ -19,7 +19,7 @@ root_path = os.path.dirname(os.path.dirname(os.path.dirname(os.path.realpath(__f
 if root_path not in sys.path:
     sys.path.insert(0, root_path)
 
-from src.utils.custom_logging import logger
+from utils.custom_logging import logger
 
 
 def sendEmail(email_content):
