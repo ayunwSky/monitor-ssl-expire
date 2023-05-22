@@ -23,7 +23,7 @@ services:
       APP_DINGTALK_PHONE_MEMBER: "钉钉群组的成员手机号,多个成员手机号用逗号分隔"
       APP_LOG_LEVEL: "INFO"
       SSL_EXPIRE_DAYS: "30"
-      
+
     networks:
       - monitor-ssl-expire
 
