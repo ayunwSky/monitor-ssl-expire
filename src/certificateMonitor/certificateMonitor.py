@@ -23,6 +23,7 @@ from utils.custom_logging import customLogger
 
 
 def get_domain():
+    """ 解析域名相关的配置文件 """
     with open('src/config/all.yaml', 'r', encoding='utf-8') as f:
         data = yaml.safe_load_all(f)
         for domain in data:
@@ -31,6 +32,10 @@ def get_domain():
 
 # 获取每个域名的证书信息
 def get_certificate_info(domain, port):
+    """
+    :param domain: 域名
+    :param port: 域名的端口
+    """
     context = ssl.create_default_context()
     context.set_ciphers('DEFAULT@SECLEVEL=1')
     with socket.create_connection((domain, port)) as sock:
@@ -47,6 +52,13 @@ def get_certificate_info(domain, port):
 
 
 def sendAlertMsg(ssl_expire_time, domain_name, email_content, subject):
+    """
+    发送告警的通道
+    :param ssl_expire_time: 域名的 SSL 证书过期时间
+    :param domain_name: 域名
+    :param email_content: 告警邮件内容
+    :param subject: 邮件主题
+    """
     # 发送告警到邮件
     if settings.env_settings["APP_OPEN_EMAIL"] == "1":
         sendEmail = send_email.sendEmail(email_content)
@@ -97,8 +109,8 @@ def check_send_alert(subject):
             customLogger.error(f"Error: {e}")
 
 
-# 主体函数
 def main():
+    """ 主体函数 """
     # 邮件主题
     subject = "SSL证书到期提醒 " + datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     check_send_alert(subject)
