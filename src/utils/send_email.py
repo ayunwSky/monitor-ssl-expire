@@ -19,10 +19,10 @@ root_path = os.path.dirname(os.path.dirname(os.path.dirname(os.path.realpath(__f
 if root_path not in sys.path:
     sys.path.insert(0, root_path)
 
-from utils.custom_logging import logger
+from utils.custom_logging import customLogger
 
 
-def sendEmail(email_content):
+def sendEmail(email_content, subject):
     # 设置SMTP邮件服务器
     mail_host = os.getenv("APP_MAIL_HOST", "")
     # 邮件服务器端口
@@ -41,7 +41,7 @@ def sendEmail(email_content):
     # 整合收件人
     receivers = to_receivers + cc_receivers
     # 主题
-    subject = "SSL证书到期提醒 " + datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    # subject = "SSL证书到期提醒 " + datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     message = MIMEMultipart()
     # 邮件内容，格式，编码
@@ -65,11 +65,12 @@ def sendEmail(email_content):
         smtpObj.sendmail(sender, receivers, message.as_string())
         # 关闭连接
         smtpObj.quit()
+        customLogger.info("Send email successfully!")
         return "200"
     except smtplib.SMTPException as e:
-        logger.error(f"Unable to send email, {e}")
+        customLogger.error(f"Unable to send email, {e}")
         return "500"
 
 
 if __name__ == '__main__':
-    sendEmail('发送邮件测试', '测试域名', 10)
+    sendEmail('邮件内容: 发送域名的 SSL 证书即将过期的邮件测试', '邮件主题: 测试域名的 SSL 证书是否即将过期')
