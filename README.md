@@ -33,6 +33,7 @@ if root_path not in sys.path:
 - **APP_DINGTALK_TOKEN**: 钉钉机器人的 webhook 地址中,access_token= 后面的这部分信息
 - **APP_DINGTALK_SECRET**: 钉钉机器人的安全设置中的加签秘钥
 - **APP_DINGTALK_PHONE_MEMBER**: 钉钉群组接受被艾特的成员手机号,可以写多个,以逗号分隔. 格式: "135xxxx0000" 或者 "135xxxx0000,151xxxx1111,177xxxx2222"
+- **APP_LOG_LEVEL**: 表示设置日志级别
 - **SSL_EXPIRE_DAYS**: 表示你想要设置的证书过期前几天发送告警信息,默认30天
 
 以上环境变量在 **`utils/settings.py`** 中均设置了默认参数,该配置中也是以这些环境变量的值为优先,获取不到环境变量才会使用该文件中设置的默认值
