@@ -18,7 +18,7 @@ if root_path not in sys.path:
 
 from src.utils import settings
 from src.utils.custom_logging import logger
-from certificateMonitor import certificate_monitor
+from certificateMonitor import certificateMonitor
 
 app = Sanic(__name__)
 
@@ -28,7 +28,7 @@ app.config.update(settings.env_settings)
 @app.listener('before_server_start')
 async def initCornJob(app, loop):
     scheduler = AsyncIOScheduler()
-    scheduler.add_job(certificate_monitor.main, 'interval', hours=1, timezone="Asia/Shanghai")
+    scheduler.add_job(certificateMonitor.main, 'interval', hours=1, timezone="Asia/Shanghai")
     scheduler.start()
     logger.info("APScheduled task has been started...")
 

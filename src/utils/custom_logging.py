@@ -48,7 +48,7 @@ LOGGING_DIC = {
     'handlers': {
         # 默认输出到文件
         'default': {
-            'level': os.getenv('DJANGO_LOG_LEVEL', 'DEBUG'),
+            'level': os.getenv('APP_LOG_LEVEL', 'DEBUG'),
             'class': 'logging.FileHandler',  # 输出到文件
             'formatter': 'standard',
             'filename': DEFAULT_LOGFILE,
@@ -56,13 +56,13 @@ LOGGING_DIC = {
         },
         # 输出到终端(标准输出)
         'console': {
-            'level': os.getenv('DJANGO_LOG_LEVEL', 'DEBUG'),
+            'level': os.getenv('APP_LOG_LEVEL', 'DEBUG'),
             'class': 'logging.StreamHandler',  # 输出到屏幕，即终端
             'formatter': 'simple'
         },
         # 根据日志文件大小来自动切割日志
         'access': {
-            'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
+            'level': os.getenv('APP_LOG_LEVEL', 'INFO'),
             'class': 'logging.handlers.RotatingFileHandler',
             'formatter': 'standard',
             'filename': ACCESS_LOGFILE,
@@ -76,22 +76,22 @@ LOGGING_DIC = {
         # 默认的 loggers
         '': {
             'handlers': ['default', 'console'],  # 这个 logger 产生的日志会丢给 default 和 console 这两个接收者
-            'level': os.getenv('DJANGO_LOG_LEVEL', 'DEBUG'),
+            'level': os.getenv('APP_LOG_LEVEL', 'DEBUG'),
             'propagate': False,  # 和日志继承相关，一般改成 False 即可。
         },
         'console_log': {
             'handlers': ['console'],  # 这个 logger 产生的日志会丢给 console 这个接收者
-            'level': os.getenv('DJANGO_LOG_LEVEL', 'DEBUG'),
+            'level': os.getenv('APP_LOG_LEVEL', 'DEBUG'),
             'propagate': False,
         },
         'access_log': {
             'handlers': ['access'],  # 这个 logger 产生的日志会丢给 access 这个接收者
-            'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
+            'level': os.getenv('APP_LOG_LEVEL', 'INFO'),
             'propagate': False,
         },
         'access_console_log': {
             'handlers': ['access', 'console'],  # 这个 logger 产生的日志会丢给 access 和 console 这两个接收者
-            'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
+            'level': os.getenv('APP_LOG_LEVEL', 'INFO'),
             'propagate': False,
         },
     },
