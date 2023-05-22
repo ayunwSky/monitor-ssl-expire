@@ -19,7 +19,7 @@ if root_path not in sys.path:
     sys.path.insert(0, root_path)
 
 from utils import send_email, alert, settings
-from utils.custom_logging import logger
+from utils.custom_logging import customLogger
 
 
 def get_domain():
@@ -46,12 +46,12 @@ def get_certificate_info(domain, port):
             return (issued_to, valid_from, valid_to, expire_days, issued_by)
 
 
-def notify(ssl_expire_time, domain_name, email_content):
+def sendAlertMsg(ssl_expire_time, domain_name, email_content, subject):
     # 发送告警到邮件
     if settings.env_settings["APP_OPEN_EMAIL"] == "1":
         sendEmail = send_email.sendEmail(email_content)
         if sendEmail == "200":
-            logger.warning(f"域名: [{domain_name}] 的 SSL 证书还有 [{ssl_expire_time}] 天就要过期了,请及时更换证书.告警已经发送至指定邮箱!")
+            customLogger.warning(f"域名: [{domain_name}] 的 SSL 证书还有 [{ssl_expire_time}] 天就要过期了,请及时更换证书.告警已经发送至指定邮箱!")
 
     # 发送告警到钉钉
     if settings.env_settings["APP_OPEN_DINGTALK"] == "1":
@@ -67,14 +67,17 @@ def notify(ssl_expire_time, domain_name, email_content):
         resp = dtalk.sendmessage(dingtalk_phone_member_list,
                                  f"域名 [{domain_name}] 的 SSL 证书还有 [{ssl_expire_time}] 天就要过期了,请注意及时更换证书!")
         if resp["errcode"] == 0:
-            logger.info("Send alarm message to DingTalk successfully.")
+            customLogger.info("Send alarm message to DingTalk successfully.")
         else:
             resp_code = resp["errcode"]
             resp_msg = resp["errmsg"]
-            logger.error(f"Failed to send alarm message to DingTalk.Error code: {resp_code},error message: {resp_msg}.")
+            customLogger.error(f"Failed to send alarm message to DingTalk.Error code: {resp_code},error message: {resp_msg}.")
 
 
-def check_send_alert():
+def check_send_alert(subject):
+    """
+    :param subject: 邮件主题
+    """
     all_domains = get_domain()
     for domain in all_domains['domains']:
         domain_name = domain.split(':')[0]
@@ -87,11 +90,15 @@ def check_send_alert():
         email_content = f"告警消息:\n\n\t\t\t\t域名: {domain_name}\n\t\t\t\t生效日期: {info[1]}\n\t\t\t\t过期日期: {info[2]}\n\n\n\n距离SSL证书过期还有: {ssl_expire_time} 天,请注意更换证书!\n"
         try:
             if int(ssl_expire_time) <= int(settings.env_settings["SSL_EXPIRE_DAYS"]):
-                notify(ssl_expire_time, domain_name, email_content)
+                sendAlertMsg(ssl_expire_time, domain_name, email_content, subject)
+            else:
+                customLogger.info(f"域名: {domain} 的 SSL 证书还有 {ssl_expire_time} 天才会过期!")
         except Exception as e:
-            logger.error(f"Error: {e}")
+            customLogger.error(f"Error: {e}")
 
 
 # 主体函数
 def main():
-    check_send_alert()
+    # 邮件主题
+    subject = "SSL证书到期提醒 " + datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    check_send_alert(subject)
