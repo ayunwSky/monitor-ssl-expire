@@ -21,8 +21,9 @@ services:
       APP_DINGTALK_TOKEN: "钉钉机器人的token,只需要access_token=后面那一段"
       APP_DINGTALK_SECRET: "钉钉机器人安全设置的加签秘钥"
       APP_DINGTALK_PHONE_MEMBER: "钉钉群组的成员手机号,多个成员手机号用逗号分隔"
-      SSL_EXPIRE_DAYS: "30"
       APP_LOG_LEVEL: "INFO"
+      SSL_EXPIRE_DAYS: "30"
+      
     networks:
       - monitor-ssl-expire
 
