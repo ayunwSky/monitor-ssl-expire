@@ -86,8 +86,7 @@ def check_send_alert():
         ssl_expire_time = info[3]
         email_content = f"告警消息:\n\n\t\t\t\t域名: {domain_name}\n\t\t\t\t生效日期: {info[1]}\n\t\t\t\t过期日期: {info[2]}\n\n\n\n距离SSL证书过期还有: {ssl_expire_time} 天,请注意更换证书!\n"
         try:
-            APP_SSL_EXPIRE = settings.env_settings["SSL_EXPIRE_DAYS"]
-            if int(ssl_expire_time) <= int(os.getenv("SSL_EXPIRE_DAYS", APP_SSL_EXPIRE)):
+            if int(ssl_expire_time) <= int(settings.env_settings["SSL_EXPIRE_DAYS"]):
                 notify(ssl_expire_time, domain_name, email_content)
         except Exception as e:
             logger.error(f"Error: {e}")
