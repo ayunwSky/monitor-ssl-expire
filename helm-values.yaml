@@ -36,10 +36,11 @@ deployment:
         value: "钉钉机器人安全设置的加签秘钥"
       - name: "APP_DINGTALK_PHONE_MEMBER"
         value: "钉钉群中成员手机号,多个手机号用逗号隔开"
-      - name: SSL_EXPIRE_DAYS
-        value: "SSL 证书过期多少天才会发送告警. 默认 30 天"
       - name: APP_LOG_LEVEL
         value: "INFO"
+      - name: SSL_EXPIRE_DAYS
+        value: "SSL 证书过期多少天才会发送告警. 默认 30 天"
+      
 
 
 # 服务配置

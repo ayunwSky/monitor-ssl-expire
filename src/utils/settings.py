@@ -22,5 +22,6 @@ env_settings = {
     'APP_DINGTALK_TOKEN': os.getenv("APP_DINGTALK_TOKEN", "your-dingtalk-access-token"),
     'APP_DINGTALK_SECRET': os.getenv("APP_DINGTALK_SECRET", "your-dingtalk-secret"),
     'APP_DINGTALK_PHONE_MEMBER': os.getenv("APP_DINGTALK_PHONE_MEMBER", "135xxxxxxxx"),
+    'APP_LOG_LEVEL': os.getenv("APP_LOG_LEVEL", "INFO"),
     'SSL_EXPIRE_DAYS': os.getenv("SSL_EXPIRE_DAYS", "30")
 }
