@@ -17,7 +17,7 @@ if root_path not in sys.path:
     sys.path.insert(0, root_path)
 
 from utils import settings
-from utils.custom_logging import logger
+from utils.custom_logging import customLogger
 from certificateMonitor import certificateMonitor
 
 app = Sanic(__name__)
@@ -30,12 +30,12 @@ async def initCornJob(app, loop):
     scheduler = AsyncIOScheduler()
     scheduler.add_job(certificateMonitor.main, 'interval', hours=1, timezone="Asia/Shanghai")
     scheduler.start()
-    logger.info("APScheduled task has been started...")
+    customLogger.info("APScheduled task has been started...")
 
 
 @app.route("/")
 async def index(request):
-    logger.info("Index page...")
+    customLogger.info("Index page...")
     return HTTPResponse("Hello Sanic Server...")
 
 
@@ -46,7 +46,7 @@ async def health_check(request):
 
 
 if __name__ == "__main__":
-    logger.info("Starting Sanic Server...")
+    customLogger.info("Starting Sanic Server...")
 
     if app.config["APP_ENV"] == "prod":
         APP_MODE = False
