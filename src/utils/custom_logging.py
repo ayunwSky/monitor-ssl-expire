@@ -21,12 +21,10 @@ ACCESS_LOGFILE = LOG_PATH / 'access.log'
 DEFAULT_LOGFILE = LOG_PATH / 'default.log'
 
 # 定义日志格式
+test_format = '[%(asctime)s] - [%(levelname)s]: %(message)s'
+simple_format = '[%(asctime)s] - [%(levelname)s] - [%(filename)s:%(lineno)d]: %(message)s'
 standard_format = '[%(asctime)s] - [%(levelname)s] - [%(threadName)s:%(thread)d] - [task_id:%(name)s] ' \
                   '- [%(filename)s:%(lineno)d]: %(message)s'
-
-simple_format = '[%(asctime)s] - [%(levelname)s] - [%(filename)s:%(lineno)d]: %(message)s'
-
-test_format = '[%(asctime)s] - [%(levelname)s]: %(message)s'
 
 # 日志配置字典
 LOGGING_DIC = {
