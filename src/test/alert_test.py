@@ -15,7 +15,7 @@ if root_path not in sys.path:
     sys.path.insert(0, root_path)
 
 from utils import alert
-from utils.custom_logging import logger
+from utils.custom_logging import customLogger
 
 
 class AlertTest():
@@ -32,20 +32,20 @@ class AlertTest():
         # 发送的用户，以及发送的消息，多用户使用"user1|user2|user3"
         resp = dtalk.sendmessage(phone_numbers, "自定义告警模块实现钉钉告警通知测试")
         if resp["errcode"] == 0:
-            logger.info("发送告警成功")
+            customLogger.info("发送告警成功")
         else:
             resp_code = resp["errcode"]
             resp_msg = resp["errmsg"]
-            logger.error(f"Error code: {resp_code}.Error message: {resp_msg}")
+            customLogger.error(f"Error code: {resp_code}.Error message: {resp_msg}")
 
     def test_sendemail():
         # 默认ssl是True
         smtp = alert.Email("发件人账号", "发件人密码", smtp="smtp地址", smtp_port="smtp端口 int", smtp_ssl=False)
         resp = smtp.sendmessage("收件人账号", '标题', '内容')
         if resp["errcode"]:
-            logger.info("发送成功")
+            customLogger.info("发送成功")
         else:
-            logger.error(resp["errmsg"])
+            customLogger.error(resp["errmsg"])
 
     def test_wechat():
         corpid = "企业的ID"
@@ -54,9 +54,9 @@ class AlertTest():
         wechat = alert.WeiXin(corpid, secret, agentid)
         resp = wechat.sendmessage("消息接受者（在企业微信后台查看的账号）", "发送内容")
         if resp["errcode"]:
-            logger.info("发送成功")
+            customLogger.info("发送成功")
         else:
-            logger.error(resp["errmsg"])
+            customLogger.error(resp["errmsg"])
 
 
 if __name__ == '__main__':
