@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>域名SSL证书即将到期提醒</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 70%;
+        }
+        h3 span {
+            color: black;
+        }
+        h3 span.highlight {
+            color: red;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: center;
+            valign: center;
+        }
+        tr:first-child {
+            background-color: lightblue;
+            color: black;
+        }
+        .bold {
+            font-weight: bold;
+        }
+        td.highlight {
+            background-color: lightyellow;
+        }
+        td span {
+            font-weight: bold;
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <p>Dear all:</p>
+    <h3>&nbsp;&nbsp;&nbsp;&nbsp;如下是域名 SSL 证书到期时间相关信息:</h3>
+    <h3>&nbsp;&nbsp;&nbsp;&nbsp;当前时间 {{ current_time }}, 域名 SSL 证书到期时间已经小于 <span class="highlight">{{ ssl_expire_days }}</span> 天, 建议域名 SSL 证书到期时间小于 <span class="highlight">7</span> 天即可尽快更换证书</h3>
+    <table>
+        <tr class="bold">
+            <th>域名</th>
+            <th>SSL证书生效时间</th>
+            <th>SSL证书到期时间</th>
+            <th>距离今天还有几天到期/天</th>
+        </tr>
+        {% for domain in domains %}
+        <tr>
+            <td>{{ domain.name }}</td>
+            <td>{{ domain.active_time }}</td>
+            <td>{{ domain.expire_time }}</td>
+            <td class="highlight"><span>{{ domain.ssl_remaining_days }}</span></td>
+        </tr>
+        {% endfor %}
+    </table>
+    <!--<h3>建议域名 SSL 证书到期时间小于 <span class="highlight">7</span> 天即可尽快更换证书</h3>-->
+</body>
+</html>

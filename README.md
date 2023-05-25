@@ -1,4 +1,4 @@
-# monitor_ssl_certificate_expire
+# monitor_ssl_expire
 
 监控域名的SSL证书是否即将过期,如果在指定时间(**默认30天内,包括30天**)SSL证书即将过期,那么就发送告警通知(支持邮件、钉钉等多种通知方式,支持同时开启多种告警通知或者选择任意一种通知方式接收告警)。
 
@@ -8,31 +8,15 @@
 - 每个环境变量都有对应的默认配置文件的值,配置文件在`utils/settings.py`文件中(**需要改成你自己的默认配置**);
 - 配置文件默认会读取环境变量设置的值。如果不设置环境变量,则环境变量的值就用该文件中设置的默认值;
 - `APP_ENV`环境变量分为`prod`(生产环境)和`dev`(开发环境),如果不设置该环境变量,则默认为`dev`环境。`dev`环境下更改代码后会自动触发重载配置。
-- 项目中 `utils/alert.py`模块支持**邮件、钉钉、企业微信**三种告警方式,使用示例在`test/alert_test.py`中。本项目的邮件告警暂时没有使用该模块,而是使用了`send_email.py`模块,后续可以整合一下。
-
-为了便于调试,我将项目根目录加入到 sys.path 中,如果不需要调试,则可以直接在`main.py`文件中加入这段代码即可. 代码如下:
-
-```shell
-root_path = os.path.dirname(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
-if root_path not in sys.path:
-    sys.path.insert(0, root_path)
-```
+- 项目中 `utils/alert.py`模块支持**邮件、钉钉、企业微信**三种告警方式,使用示例在`test/alert_test.py`中。因为特殊原因，本项目的邮件告警暂时没有使用该模块,而是使用了`send_email.py`模块。
 
 ## 环境变量说明
 
+### 项目的全局环境变量
+
 - **APP_PORT**: 应用侦听的端口,建议设置为 8080
 - **APP_HOST**: 应用侦听的主机地址,建议设置为 0.0.0.0
-- **APP_ENV**: 应用启动的模式,dev(开发环境)或者prod(生产环境)
-- **APP_MAIL_PORT**: 邮件服务器端口
-- **APP_MAIL_USER**: 发件人邮箱的用户名
-- **APP_MAIL_PASS**: 发件人邮箱的密码
-- **APP_MAIL_HOST**: SMTP邮件服务器
-- **APP_MAIL_SENDER**: 发件人邮箱
-- **APP_OPEN_EMAIL**: 只有两个可选值。1: 表示发送告警到邮件,0: 表示不发送告警到邮件
-- **APP_OPEN_DINGTALK**: 只有两个可选值。1: 表示发送告警到钉钉,0: 表示不发送告警到钉钉
-- **APP_DINGTALK_TOKEN**: 钉钉机器人的 webhook 地址中,access_token= 后面的这部分信息
-- **APP_DINGTALK_SECRET**: 钉钉机器人的安全设置中的加签秘钥
-- **APP_DINGTALK_PHONE_MEMBER**: 钉钉群组接受被艾特的成员手机号,可以写多个,以逗号分隔. 格式: "135xxxx0000" 或者 "135xxxx0000,151xxxx1111,177xxxx2222"
+- **APP_ENV**: 应用启动的模式,dev(开发环境)或者prod(生产环境). 默认使用 `dev` 环境
 - **APP_LOG_LEVEL**: 表示设置日志级别
 - **SSL_EXPIRE_DAYS**: 表示你想要设置的证书过期前几天发送告警信息,默认30天
 
