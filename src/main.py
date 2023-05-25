@@ -28,7 +28,8 @@ app.config.update(settings.env_settings)
 @app.listener('before_server_start')
 async def initCornJob(app, loop):
     scheduler = AsyncIOScheduler()
-    scheduler.add_job(certificateMonitor.main, 'interval', hours=1, timezone="Asia/Shanghai")
+    # 每小时的第 0 分钟执行一次
+    scheduler.add_job(certificateMonitor.main, 'cron', minute=0, second=0, timezone='Asia/Shanghai')
     scheduler.start()
     customLogger.info("APScheduled task has been started...")
 

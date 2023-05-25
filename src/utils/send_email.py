@@ -66,7 +66,8 @@ def sendEmail(email_subject, email_domains_info, email_format='html'):
         return "500", e
 
 
-if __name__ == '__main__':
+def sendEmailTest():
+    """ 测试发送邮件 """
     test_domains_data = [
     {
         'name': 'www.example1.cn',
@@ -87,4 +88,8 @@ if __name__ == '__main__':
     ]
 
     email_subject = "邮件主题是: 测试域名 SSL 证书到期时间 " + datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    sendEmail(email_subject='邮件主题是: 测试域名', email_domains_info=test_domains_data, email_format='html')
+    sendEmail(email_subject=email_subject, email_domains_info=test_domains_data, email_format='html')
+
+
+if __name__ == '__main__':
+    sendEmailTest()
