@@ -109,7 +109,7 @@ def sendAlertMsg(email_subject, domains_info_list=""):
                 )
 
 
-def checkSendAlert(email_subject, email_format='html'):
+def checkSendAlertMsg(email_subject, email_format='html'):
     """
     判断域名的 SSL 证书小于指定时间(ssl_expire_time)则发送告警通知
     :param email_subject: 邮件主题
@@ -155,4 +155,4 @@ def checkSendAlert(email_subject, email_format='html'):
 def main():
     """ 主体函数 """
     email_subject = "SSL证书到期提醒 " + datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    checkSendAlert(email_subject, email_format="html")
+    checkSendAlertMsg(email_subject, email_format="html")
