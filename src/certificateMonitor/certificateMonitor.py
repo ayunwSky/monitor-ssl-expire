@@ -149,7 +149,7 @@ def check_send_alert(email_subject, email_format='html'):
             )
             sys.exit(1)
     except Exception as e:
-        customLogger.error(f"Error: {e}")
+        customLogger.error(f"Error message: {e}")
 
 
 def main():
