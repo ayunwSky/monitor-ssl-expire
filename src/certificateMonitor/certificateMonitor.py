@@ -145,7 +145,7 @@ def checkSendAlert(email_subject, email_format='html'):
             sendAlertMsg(email_subject, domains_info_list)
         else:
             customLogger.error(
-                f"Set email_format failed, you set email_format is: {email_format}, only support: 'html'. Please rreset it and restart APP..."
+                f"Set email_format failed, you set email_format is: {email_format}, only support: 'html'. Please reset it and restart APP..."
             )
             sys.exit(1)
     except Exception as e:
