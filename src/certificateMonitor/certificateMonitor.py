@@ -16,7 +16,7 @@ from utils.customLogging import customLogger
 from certificateMonitor.sendAlertChannel import SendAlertMsgChannel
 
 
-def get_domain():
+def get_domain_info():
     """ 解析配置文件 """
     with open('src/config/all.yaml', 'r', encoding='utf-8') as f:
         data = yaml.safe_load_all(f)
@@ -109,12 +109,12 @@ def sendAlertMsg(email_subject, domains_info_list=""):
                 )
 
 
-def check_send_alert(email_subject, email_format='html'):
+def checkSendAlert(email_subject, email_format='html'):
     """
     判断域名的 SSL 证书小于指定时间(ssl_expire_time)则发送告警通知
     :param email_subject: 邮件主题
     """
-    all_domains = get_domain()
+    all_domains = get_domain_info()
     domains_info_list = []
     for domain in all_domains['domainsInfo']:
         if ":" in domain:
@@ -155,4 +155,4 @@ def check_send_alert(email_subject, email_format='html'):
 def main():
     """ 主体函数 """
     email_subject = "SSL证书到期提醒 " + datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    check_send_alert(email_subject, email_format="html")
+    checkSendAlert(email_subject, email_format="html")
