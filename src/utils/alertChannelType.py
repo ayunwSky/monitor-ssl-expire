@@ -3,13 +3,9 @@
 
 import json
 import urllib3
-import smtplib
 import datetime
 import requests
 from requests.adapters import HTTPAdapter
-from email.utils import formataddr
-from email.mime.text import MIMEText
-from email.mime.multipart import MIMEMultipart
 
 from utils import genSign, settings
 from utils.customLogging import customLogger

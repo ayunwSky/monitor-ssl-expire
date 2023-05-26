@@ -5,7 +5,6 @@
 # -*- FileName    :  send_email.py
 # *******************************************
 
-import os
 import sys
 import smtplib
 import datetime
