@@ -34,7 +34,7 @@ dingtalk_settings = {
 # 飞书的配置
 feishu_settings = {
     'APP_FS_OPEN': os.getenv("APP_FS_OPEN", "0"),
-    'APP_FS_TOKEN': os.getenv("APP_FS_TOKEN", ""),
-    'APP_FS_SECRET': os.getenv("APP_FS_SECRET", ""),
+    'APP_FS_TOKEN': os.getenv("APP_FS_TOKEN", "飞书机器人的webhook地址中,hook/后面的这部分信息"),
+    'APP_FS_SECRET': os.getenv("APP_FS_SECRET", "飞书机器人的安全设置中的加签秘钥"),
     'APP_FS_ALERT_TYPE': os.getenv("APP_FS_ALERT_TYPE", "interactive")
 }
