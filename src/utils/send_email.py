@@ -57,6 +57,6 @@ def sendEmail(email_subject, email_domains_info, email_format='html'):
         smtpObj.login(sender, mail_pass)
         smtpObj.sendmail(sender, receivers, message.as_string())
         smtpObj.quit()
-        return "200", "OK"
+        return "200", "success"
     except smtplib.SMTPException as e:
         return "500", e
