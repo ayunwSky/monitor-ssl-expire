@@ -30,6 +30,8 @@ async def initCornJob(app, loop):
     scheduler.add_job(certificateMonitor.main, 'cron', hour=10, minute=30, second=0, timezone='Asia/Shanghai')
     # 每天下午 16点30分 执行一次计划任务
     scheduler.add_job(certificateMonitor.main, 'cron', hour=16, minute=30, second=0, timezone='Asia/Shanghai')
+    # 一分钟执行一次(常用于测试的时候使用)
+    scheduler.add_job(certificateMonitor.main, 'interval', minutes=1, timezone="Asia/Shanghai")
     scheduler.start()
     customLogger.info("APScheduled task has been started...")
 
