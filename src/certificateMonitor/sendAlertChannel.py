@@ -33,7 +33,7 @@ class SendAlertMsgChannel(object):
             return "200", "success"
         elif sendEmail[0] == "500":
             resp_msg = sendEmail[1]
-        return sendEmail[0], resp_msg
+        return "500", resp_msg
 
     def alert_send_to_dingtalk(self, domain_name, ssl_remaining_days):
         """ 发送告警到钉钉通道 """
