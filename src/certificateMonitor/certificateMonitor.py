@@ -64,7 +64,7 @@ def sendAlertMsg(email_subject, domains_info_list=""):
     if isEmailChannel != "1" and \
         isDingtalkChannel != "1" and \
         isFeishuChannel != "1":
-        customLogger.warning(
+        customLogger.error(
             f"Not open any alert channel, need to set at least one of APP environment variable: (APP_MAIL_OPEN、APP_DINGTALK_OPEN、APP_FS_OPEN)!"
         )
         sys.exit(1)
