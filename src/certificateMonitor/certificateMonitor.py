@@ -69,10 +69,10 @@ def sendAlertMsg(email_subject, domains_info_list=""):
         )
         sys.exit(1)
 
-    sendAlertMsg = SendAlertMsgChannel(email_subject, domains_info_list)
+    sendAlert = SendAlertMsgChannel(email_subject, domains_info_list)
 
     if isEmailChannel == "1":
-        sendEmailResp = sendAlertMsg.alert_send_to_email()
+        sendEmailResp = sendAlert.alert_send_to_email()
         if sendEmailResp[0] == "200":
             customLogger.info(f"Send alert message of domain ssl expire to email success, status code: {sendEmailResp[0]}!")
         elif sendEmailResp[0] == "500":
@@ -87,7 +87,7 @@ def sendAlertMsg(email_subject, domains_info_list=""):
         ssl_remaining_days = domain['ssl_remaining_days']
 
         if isFeishuChannel == "1":
-            sendFeishuResp = sendAlertMsg.alert_send_to_feishu(domain_name, active_time, expire_time, ssl_remaining_days)
+            sendFeishuResp = sendAlert.alert_send_to_feishu(domain_name, active_time, expire_time, ssl_remaining_days)
             if sendFeishuResp[0] == "200":
                 customLogger.info(
                     f"Send alert message of domain [{domain_name}] ssl expire to feishu success, status code: {sendFeishuResp[0]}!"
@@ -98,7 +98,7 @@ def sendAlertMsg(email_subject, domains_info_list=""):
                 )
 
         if isDingtalkChannel == "1":
-            sendDingtalkResp = sendAlertMsg.alert_send_to_feishu(domain_name, active_time, expire_time, ssl_remaining_days)
+            sendDingtalkResp = sendAlert.alert_send_to_feishu(domain_name, active_time, expire_time, ssl_remaining_days)
             if sendDingtalkResp[0] == "200":
                 customLogger.info(
                     f"Send alert message of domain [{domain_name}] ssl expire to dingtalk success, status code: {sendDingtalkResp[0]}!"
