@@ -28,6 +28,7 @@ def sendEmail(email_subject, email_domains_info, email_format='html'):
     else:
         customLogger.error(f"Set email_format failed, you set email_format is: {email_format}, only support: 'html'. Please rreset it and restart APP...")
         sys.exit(1)
+
     mail_port = settings.email_settings["APP_MAIL_PORT"]
     mail_host = settings.email_settings["APP_MAIL_HOST"]
     mail_pass = settings.email_settings["APP_MAIL_PASS"]
@@ -38,7 +39,6 @@ def sendEmail(email_subject, email_domains_info, email_format='html'):
         to_receivers = [receivers for receivers in receivers_list]
     else:
         to_receivers = [receiver_email]
-
     cc_receivers = [""]
     receivers = to_receivers + cc_receivers
 
@@ -48,7 +48,6 @@ def sendEmail(email_subject, email_domains_info, email_format='html'):
     message['To'] = Header(';'.join(to_receivers))
     message['Cc'] = Header(';'.join(cc_receivers))
     message['Subject'] = Header(email_subject, 'utf-8')
-
     try:
         smtpObj = smtplib.SMTP(mail_host, int(mail_port))
         smtpObj.starttls()
