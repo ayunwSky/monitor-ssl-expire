@@ -24,8 +24,7 @@ def sendEmail(email_subject, email_domains_info, email_format='html'):
         with open('src/email_template/email_template.html', 'r', encoding='utf-8') as f:
             template_content = f.read()
             template = Template(template_content)
-            rendered_content = template.render(ssl_expire_days=set_ssl_expire_days, current_time=current_time, domains=email_domains_info)
-            email_content = rendered_content
+            email_content = template.render(ssl_expire_days=set_ssl_expire_days, current_time=current_time, domains=email_domains_info)
     else:
         customLogger.error(f"Set email_format failed, you set email_format is: {email_format}, only support: 'html'. Please rreset it and restart APP...")
         sys.exit(1)
