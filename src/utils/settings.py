@@ -9,7 +9,7 @@ global_settings = {
     'APP_PORT': os.getenv("APP_PORT", "8080"),
     'APP_HOST': os.getenv("APP_HOST", "0.0.0.0"),
     'APP_LOG_LEVEL': os.getenv("APP_LOG_LEVEL", "INFO"),
-    'SSL_EXPIRE_DAYS': os.getenv("SSL_EXPIRE_DAYS", "90")
+    'SSL_EXPIRE_DAYS': os.getenv("SSL_EXPIRE_DAYS", "30")
 }
 
 # 邮箱的配置
