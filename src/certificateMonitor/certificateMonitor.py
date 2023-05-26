@@ -98,7 +98,7 @@ def sendAlertMsg(email_subject, domains_info_list=""):
                 )
 
         if isDingtalkChannel == "1":
-            sendDingtalkResp = sendAlert.alert_send_to_feishu(domain_name, active_time, expire_time, ssl_remaining_days)
+            sendDingtalkResp = sendAlert.alert_send_to_dingtalk(domain_name, active_time, expire_time, ssl_remaining_days)
             if sendDingtalkResp[0] == "200":
                 customLogger.info(
                     f"Send alert message of domain [{domain_name}] ssl expire to dingtalk success, status code: {sendDingtalkResp[0]}!"
