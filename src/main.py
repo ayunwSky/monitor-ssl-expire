@@ -47,8 +47,31 @@ async def health_check(request):
     return json({"status": "UP", "statusCode": "200", "currentTime": current_time})
 
 
+def checkAlertChannelIsOpen():
+    """
+    检查是否开启了告警通道。0:关闭,1:开启
+    """
+    isEmailChannel = settings.email_settings["APP_MAIL_OPEN"]
+    isFeishuChannel = settings.feishu_settings["APP_FS_OPEN"]
+    isDingtalkChannel = settings.dingtalk_settings["APP_DINGTALK_OPEN"]
+    customLogger.info(
+        f"告警通道开启情况如下(1为开启,0为关闭): isEmailChannel: {isEmailChannel}, isDingtalkChannel: {isDingtalkChannel}, isFeishuChannel: {isFeishuChannel}"
+    )
+    if isEmailChannel == "1":
+        customLogger.info(f"当前开启的告警通道为 email !")
+    elif isFeishuChannel == "1":
+        customLogger.info(f"当前开启的告警通道为 feishu !")
+    elif isDingtalkChannel == "1":
+        customLogger.info(f"当前开启的告警通道为 dingding !")
+    elif isEmailChannel != "1" and isDingtalkChannel != "1" and isFeishuChannel != "1":
+        customLogger.error(f"当前没有开启任意一个告警通道或者开启通道开关错误,请检查或至少开启一个告警通道然后运行该 APP ...")
+        sys.exit(1)
+
+
 if __name__ == "__main__":
     customLogger.info("Starting Sanic Server...")
+
+    checkAlertChannelIsOpen()
 
     if app.config["APP_ENV"] == "dev":
         APP_MODE = True

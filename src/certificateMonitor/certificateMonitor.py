@@ -57,18 +57,6 @@ def sendAlertMsg(email_subject, domains_info_list=""):
     isFeishuChannel = settings.feishu_settings["APP_FS_OPEN"]
     isDingtalkChannel = settings.dingtalk_settings["APP_DINGTALK_OPEN"]
 
-    customLogger.info(
-        f"告警通道开启情况如下(1为开启,0为关闭): isEmailChannel: {isEmailChannel}, isDingtalkChannel: {isDingtalkChannel}, isFeishuChannel: {isFeishuChannel}"
-    )
-
-    if isEmailChannel != "1" and \
-        isDingtalkChannel != "1" and \
-        isFeishuChannel != "1":
-        customLogger.error(
-            f"Not open any alert channel, need to set at least one of APP environment variable: (APP_MAIL_OPEN、APP_DINGTALK_OPEN、APP_FS_OPEN)!"
-        )
-        sys.exit(1)
-
     sendAlert = SendAlertMsgChannel(email_subject, domains_info_list)
 
     if isEmailChannel == "1":
