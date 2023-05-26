@@ -1,24 +1,15 @@
 #!/usr/bin/env python3
 # -*- encoding: utf-8 -*-
 # *******************************************
-# -*- CreateTime  :  2023/05/18 17:04:27
-# -*- Author      :  Allen_Jol
+# -*- Author      :  ayunwSky
 # -*- FileName    :  genSign.py
-# -*- Desc        :  钉钉机器人加签
 # *******************************************
 
-import os
-import sys
 import time
 import hmac
 import base64
 import hashlib
-import datetime
 import urllib.parse
-
-#root_path = os.path.dirname(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
-#if root_path not in sys.path:
-#    sys.path.insert(0, root_path)
 
 from utils import settings
 

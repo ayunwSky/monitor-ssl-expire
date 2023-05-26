@@ -1,20 +1,19 @@
 #!/usr/bin/env python3
 # -*- encoding: utf-8 -*-
 # *******************************************
-# -*- CreateTime  :  2023/03/13 15:51:17
 # -*- Author      :  ayunwSky
 # -*- FileName    :  certificateMonitor.py
 # *******************************************
 
-import os
 import sys
 import ssl
 import yaml
 import socket
 import datetime
 
-from utils import send_email, alert, settings
-from utils.custom_logging import customLogger
+from utils import settings
+from utils.customLogging import customLogger
+from certificateMonitor.sendAlertChannel import SendAlertMsgChannel
 
 
 def get_domain():
@@ -49,83 +48,64 @@ def get_certificate_info(domain, port):
 def sendAlertMsg(email_subject, domains_info_list=""):
     """
     发送告警信息的通道.可以任选一个告警方式接收告警,也支持同时开启发送告警到多个告警通道
+
     :param email_subject: 邮件主题
     :param domains_info_list: 是一个列表类型,里面嵌套了多个域名的SSL证书到期时间小于指定时间的字典信息。
     :return
     """
-    if settings.email_settings["APP_OPEN_EMAIL"] != "1" and \
-        settings.dingtalk_settings["APP_OPEN_DINGTALK"] != "1" and \
-        settings.feishu_settings["APP_OPEN_FS"] != "1":
+    isEmailChannel = settings.email_settings["APP_MAIL_OPEN"]
+    isFeishuChannel = settings.feishu_settings["APP_FS_OPEN"]
+    isDingtalkChannel = settings.dingtalk_settings["APP_DINGTALK_OPEN"]
+
+    customLogger.info(
+        f"告警通道开启情况如下(1为开启,0为关闭): isEmailChannel: {isEmailChannel}, isDingtalkChannel: {isDingtalkChannel}, isFeishuChannel: {isFeishuChannel}"
+    )
+
+    if isEmailChannel != "1" and \
+        isDingtalkChannel != "1" and \
+        isFeishuChannel != "1":
         customLogger.warning(
-            f"Not open any alert channel, need to set at least one of environment variable: (APP_OPEN_EMAIL、APP_OPEN_DINGTALK、APP_OPEN_FS)!")
+            f"Not open any alert channel, need to set at least one of APP environment variable: (APP_MAIL_OPEN、APP_DINGTALK_OPEN、APP_FS_OPEN)!"
+        )
+        sys.exit(1)
 
-    if settings.email_settings["APP_OPEN_EMAIL"] == "1":
-        receiver_email = settings.email_settings['APP_MAIL_RECEIVERS']
-        if receiver_email != "" and "," in receiver_email:
-            receivers_list = receiver_email.split(",")
-            all_receiver_email_list = [receivers for receivers in receivers_list]
-            customLogger.info(f"all_receiver_email_list: {all_receiver_email_list}")
-        else:
-            all_receiver_email_list = [receiver_email]
+    sendAlertMsg = SendAlertMsgChannel(email_subject, domains_info_list)
 
-        sendEmail = send_email.sendEmail(email_subject, domains_info_list, email_format='html')
-        if sendEmail[0] == "200":
-            customLogger.info(f"Send alert message of domain SSL expire info to Email successfully, email list: {all_receiver_email_list},please check!")
-        elif sendEmail[0] == "500":
-            errMsg = sendEmail[1]
-            customLogger.error(f"Failed to send email, error message: {errMsg}")
-
-    if settings.dingtalk_settings["APP_OPEN_DINGTALK"] == "1":
-        dingtalk_token = settings.dingtalk_settings["APP_DINGTALK_TOKEN"]
-        dingtalk_phone_member = settings.dingtalk_settings["APP_DINGTALK_PHONE_MEMBER"]
-        if dingtalk_phone_member != "" and "," in dingtalk_phone_member:
-            phone_member_list = dingtalk_phone_member.split(",")
-            all_dingtalk_phone_member_list = [phone_member for phone_member in phone_member_list]
-        else:
-            all_dingtalk_phone_member_list = [dingtalk_phone_member]
-
-        dtalk = alert.DinTalk(dingtalk_token)
-        for domain in domains_info_list:
-            domain_name = domain["name"]
-            domain_ssl_remaining_days = domain["ssl_remaining_days"]
-            resp = dtalk.sendmessage(all_dingtalk_phone_member_list,
-                                     f"Domain [{domain_name}] SSL cert will expire in [{domain_ssl_remaining_days}] days, check and replace the certificate in time!")
-            if resp["errcode"] == 0:
-                customLogger.info(
-                    f"Send alert message of domain [{domain_name}] SSL expire info to DingTalk successfully! At user: {all_dingtalk_phone_member_list}!"
-                )
-            else:
-                resp_code = resp["errcode"]
-                resp_msg = resp["errmsg"]
-                customLogger.error(
-                    f"Failed to send alert message of domain [{domain_name}] SSL expire info to DingTalk. Error code: {resp_code}. Error message: {resp_msg}"
-                )
-
-    if settings.feishu_settings["APP_OPEN_FS"] == "1":
-        fs_token = settings.feishu_settings["APP_FS_TOKEN"]
-        fs_secret = settings.feishu_settings["APP_FS_SECRET"]
-        fs_alert_type = settings.feishu_settings["APP_FS_ALERT_TYPE"]
-
-        if fs_token is None or fs_secret is None or fs_alert_type is None:
-            customLogger.error(
-                f"Please set system environment variable and try again, Require: (APP_FS_TOKEN、APP_FS_SECRET、APP_FS_ALERT_TYPE)"
+    if isEmailChannel == "1":
+        sendEmailResp = sendAlertMsg.alert_send_to_email()
+        if sendEmailResp[0] == "200":
+            customLogger.info(f"Send alert message of domain ssl expire to email success, status code: {sendEmailResp[0]}!")
+        elif sendEmailResp[0] == "500":
+            customLogger.info(
+                f"Send alert message of domain ssl expire to email failed, status code: {sendEmailResp[0]}, error message: {sendEmailResp[1]}!"
             )
-            sys.exit(1)
 
-        feishu = alert.FeiShu(access_token=fs_token, secret=fs_secret)
-        for domain in domains_info_list:
-            name = domain['name']
-            active_time = domain['active_time']
-            expire_time = domain['expire_time']
-            ssl_remaining_days = domain['ssl_remaining_days']
-            resp = feishu.sendmessage(name, active_time, expire_time, ssl_remaining_days)
-            if resp["StatusCode"] == 0 and resp["StatusMessage"] == "success":
-                customLogger.info(f"Send alert message of domain [{name}] ssl expire to feishu successfully! Msg: {resp}")
-            else:
-                resp_code = resp["StatusCode"]
-                resp_msg = resp["StatusMessage"]
-                customLogger.error(
-                    f"Failed to send alert message of domain [{name}] ssl expire to feishu. Error code: {resp_code}. Error message: {resp_msg}"
+    for domain in domains_info_list:
+        domain_name = domain['name']
+        active_time = domain['active_time']
+        expire_time = domain['expire_time']
+        ssl_remaining_days = domain['ssl_remaining_days']
+
+        if isFeishuChannel == "1":
+            sendFeishuResp = sendAlertMsg.alert_send_to_feishu(domain_name, active_time, expire_time, ssl_remaining_days)
+            if sendFeishuResp[0] == "200":
+                customLogger.info(
+                    f"Send alert message of domain [{domain_name}] ssl expire to feishu success, status code: {sendFeishuResp[0]}!"
+                )
+            elif sendFeishuResp[0] == "500":
+                customLogger.info(
+                    f"Send alert message of domain [{domain_name}] ssl expire to feishu failed, status code: {sendFeishuResp[0]}, error message: {sendFeishuResp[1]}!"
+                )
+
+        if isDingtalkChannel == "1":
+            sendDingtalkResp = sendAlertMsg.alert_send_to_feishu(domain_name, active_time, expire_time, ssl_remaining_days)
+            if sendDingtalkResp[0] == "200":
+                customLogger.info(
+                    f"Send alert message of domain [{domain_name}] ssl expire to dingtalk success, status code: {sendDingtalkResp[0]}!"
+                )
+            elif sendDingtalkResp[0] == "500":
+                customLogger.info(
+                    f"Send alert message of domain [{domain_name}] ssl expire to dingtalk failed, status code: {sendDingtalkResp[0]}, error message: {sendDingtalkResp[1]}!"
                 )
 
 
