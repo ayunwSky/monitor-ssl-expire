@@ -17,7 +17,7 @@ from utils.certUtils.certCommon import get_domain_ip
 from certificateMonitor.sendAlertChannel import SendAlertMsgChannel
 
 
-def get_domain_info():
+def getDomainInfo():
     """ 解析配置文件 """
     with open('src/config/all.yaml', 'r', encoding='utf-8') as f:
         data = yaml.safe_load_all(f)
@@ -25,7 +25,7 @@ def get_domain_info():
             return domain
 
 
-def get_certificate_info(domain, port):
+def getCertificateInfo(domain, port):
     """
     获取每个域名的证书信息
     :param domain: 域名
@@ -104,7 +104,7 @@ def checkSendAlertMsg(email_subject, email_format='html'):
     判断域名的 SSL 证书小于指定时间(ssl_expire_time)则发送告警通知
     :param email_subject: 邮件主题
     """
-    all_domains = get_domain_info()
+    all_domains = getDomainInfo()
     domains_info_list = []
     for domain in all_domains['domainsInfo']:
         if ":" in domain:
@@ -120,7 +120,7 @@ def checkSendAlertMsg(email_subject, email_format='html'):
             customLogger.warning(f"域名 {domain_name} 的端口填写成了 {domain_port}, 端口填写错误,请重新填写")
             sys.exit(1)
 
-        info = get_certificate_info(domain=domain_name, port=domain_port)
+        info = getCertificateInfo(domain=domain_name, port=domain_port)
         domain_ip = get_domain_ip(domain_name)
         ssl_expire_time = info[3]
 
