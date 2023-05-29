@@ -21,7 +21,7 @@ def sendEmail(email_subject, email_domains_info, email_format='html'):
     set_ssl_expire_days = settings.global_settings['SSL_EXPIRE_DAYS']
     current_time = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     if email_format == 'html':
-        with open('src/email_template/email_template.html', 'r', encoding='utf-8') as f:
+        with open('src/templates/email_template.html', 'r', encoding='utf-8') as f:
             template_content = f.read()
             template = Template(template_content)
             email_content = template.render(ssl_expire_days=set_ssl_expire_days, current_time=current_time, domains=email_domains_info)
