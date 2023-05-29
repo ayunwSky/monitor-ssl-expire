@@ -44,13 +44,15 @@
             <th>域名</th>
             <th>SSL证书生效时间</th>
             <th>SSL证书到期时间</th>
-            <th>距离剩余几天到期/天</th>
+            <th>域名解析的IP地址</th>
+            <th>距离今天还有几天到期/天</th>
         </tr>
         {% for domain in domains %}
         <tr>
-            <td>{{ domain.name }}</td>
+            <td>{{ domain.domain_name }}</td>
             <td>{{ domain.active_time }}</td>
             <td>{{ domain.expire_time }}</td>
+            <td>{{ domain.domain_ip }}</td>
             <td class="highlight"><span>{{ domain.ssl_remaining_days }}</span></td>
         </tr>
         {% endfor %}

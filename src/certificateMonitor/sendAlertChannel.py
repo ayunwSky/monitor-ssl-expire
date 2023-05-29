@@ -6,8 +6,8 @@
 # *******************************************
 
 import sys
-from utils import alertChannelType, send_email, settings
 from utils.customLogging import customLogger
+from utils import alertChannelType, send_email, settings
 
 
 class SendAlertMsgChannel(object):
@@ -28,12 +28,12 @@ class SendAlertMsgChannel(object):
         else:
             all_receiver_email_list = [receiver_email]
 
-        sendEmail = send_email.sendEmail(self.email_subject, self.domains_info_list, email_format='html')
-        if sendEmail[0] == "200":
+        resp = send_email.sendEmail(self.email_subject, self.domains_info_list, email_format='html')
+        if resp[0] == "200":
             return "200", "success"
-        elif sendEmail[0] == "500":
-            resp_msg = sendEmail[1]
-        return "500", resp_msg
+        elif resp[0] == "500":
+            resp_msg = resp[1]
+        return resp[0], resp_msg
 
     def alert_send_to_dingtalk(self, domain_name, ssl_remaining_days):
         """ 发送告警到钉钉通道 """
@@ -59,7 +59,7 @@ class SendAlertMsgChannel(object):
             resp_msg = {"resp_errcode": resp_errcode, "resp_errmsg": resp_errmsg}
             return "500", resp_msg
 
-    def alert_send_to_feishu(self, domain_name, active_time, expire_time, ssl_remaining_days):
+    def alert_send_to_feishu(self, domain_name, domain_ip, active_time, expire_time, ssl_remaining_days):
         """ 发送告警到飞书通道 """
         fs_token = settings.feishu_settings["APP_FS_TOKEN"]
         fs_secret = settings.feishu_settings["APP_FS_SECRET"]
@@ -70,7 +70,7 @@ class SendAlertMsgChannel(object):
             sys.exit(1)
 
         feishu = alertChannelType.FeiShu(access_token=fs_token, secret=fs_secret)
-        resp = feishu.sendmessage(domain_name, active_time, expire_time, ssl_remaining_days)
+        resp = feishu.sendmessage(domain_name, domain_ip, active_time, expire_time, ssl_remaining_days)
         if resp["StatusCode"] == 0 and resp["StatusMessage"] == "success":
             return "200", "success"
         else:

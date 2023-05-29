@@ -13,6 +13,7 @@ import datetime
 
 from utils import settings
 from utils.customLogging import customLogger
+from utils.certUtils.certCommon import get_domain_ip
 from certificateMonitor.sendAlertChannel import SendAlertMsgChannel
 
 
@@ -69,13 +70,14 @@ def sendAlertMsg(email_subject, domains_info_list=""):
             )
 
     for domain in domains_info_list:
-        domain_name = domain['name']
+        domain_name = domain['domain_name']
+        domain_ip = domain['domain_ip']
         active_time = domain['active_time']
         expire_time = domain['expire_time']
         ssl_remaining_days = domain['ssl_remaining_days']
 
         if isFeishuChannel == "1":
-            sendFeishuResp = sendAlert.alert_send_to_feishu(domain_name, active_time, expire_time, ssl_remaining_days)
+            sendFeishuResp = sendAlert.alert_send_to_feishu(domain_name, domain_ip, active_time, expire_time, ssl_remaining_days)
             if sendFeishuResp[0] == "200":
                 customLogger.info(
                     f"Send alert message of domain [{domain_name}] ssl expire to feishu success, status code: {sendFeishuResp[0]}!"
@@ -86,7 +88,7 @@ def sendAlertMsg(email_subject, domains_info_list=""):
                 )
 
         if isDingtalkChannel == "1":
-            sendDingtalkResp = sendAlert.alert_send_to_dingtalk(domain_name, active_time, expire_time, ssl_remaining_days)
+            sendDingtalkResp = sendAlert.alert_send_to_dingtalk(domain_name, domain_ip, active_time, expire_time, ssl_remaining_days)
             if sendDingtalkResp[0] == "200":
                 customLogger.info(
                     f"Send alert message of domain [{domain_name}] ssl expire to dingtalk success, status code: {sendDingtalkResp[0]}!"
@@ -117,11 +119,13 @@ def checkSendAlertMsg(email_subject, email_format='html'):
             sys.exit(1)
 
         info = get_certificate_info(domain=domain_name, port=domain_port)
+        domain_ip = get_domain_ip(domain_name)
         ssl_expire_time = info[3]
 
         if int(ssl_expire_time) <= int(settings.global_settings["SSL_EXPIRE_DAYS"]):
             domains_info_dict = {
-                "name": domain_name,
+                "domain_name": domain_name,
+                "domain_ip": domain_ip,
                 "active_time": info[1],
                 "expire_time": info[2],
                 "ssl_remaining_days": ssl_expire_time
