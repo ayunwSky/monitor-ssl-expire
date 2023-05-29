@@ -108,13 +108,15 @@ def checkSendAlertMsg(email_subject, email_format='html'):
     domains_info_list = []
     for domain in all_domains['domainsInfo']:
         if ":" in domain:
-            domain_name = domain.split(':')[0]
-            domain_port = domain.split(':')[1]
+            domain_name, domain_port = domain.split(':')
+            # domain_name = domain.split(':')[0]
+            # domain_port = domain.split(':')[1]
         else:
-            domain_name = domain
-            domain_port = "443"
+            domain_name, domain_port = domain, settings.DEFAULT_SSL_PORT
+            # domain_name = domain
+            # domain_port = "443"
 
-        if not domain_port.isnumeric():
+        if not domain_port.isdigit():
             customLogger.warning(f"域名 {domain_name} 的端口填写成了 {domain_port}, 端口填写错误,请重新填写")
             sys.exit(1)
 
