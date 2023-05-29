@@ -3,6 +3,13 @@
 
 import os
 
+# SSL默认端口
+DEFAULT_SSL_PORT = 443
+
+# 默认超时时间 3 秒
+DEFAULT_SOCKET_TIMEOUT = 3
+
+
 # 项目相关的全局配置
 global_settings = {
     'APP_ENV': os.getenv("APP_ENV", "prod"),
