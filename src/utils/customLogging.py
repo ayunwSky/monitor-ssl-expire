@@ -93,5 +93,6 @@ LOGGING_DIC = {
 config.dictConfig(LOGGING_DIC)
 customLogger = getLogger("console_log")
 
+
 if __name__ == '__main__':
     customLogger.info("I am test log...")
